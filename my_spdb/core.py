@@ -1,4 +1,4 @@
-from my_spdb.models import Server, Application, Role
+from my_spdb.models import Application, Role, Server
 from spdb.base import SPDB
 
 

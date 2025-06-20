@@ -4,21 +4,25 @@ The content has been processed where empty lines have been removed.
 # File Summary
 
 ## Purpose
+
 This file contains a packed representation of the entire repository's contents.
 It is designed to be easily consumable by AI systems for analysis, code review,
 or other automated processes.
 
 ## File Format
+
 The content is organized as follows:
+
 1. This summary section
 2. Repository information
 3. Directory structure
 4. Repository files (if enabled)
 5. Multiple file entries, each consisting of:
-  a. A header with the file path (## File: path/to/file)
-  b. The full contents of the file in a code block
+   a. A header with the file path (## File: path/to/file)
+   b. The full contents of the file in a code block
 
 ## Usage Guidelines
+
 - This file should be treated as read-only. Any changes should be made to the
   original repository files, not this packed version.
 - When processing this file, use the file path to distinguish
@@ -27,15 +31,17 @@ The content is organized as follows:
   the same level of security as you would the original repository.
 
 ## Notes
+
 - Some files may have been excluded based on .gitignore rules and Repomix's configuration
 - Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
-- Files matching these patterns are excluded: **/__init__.py, tests/**, .gitignore, .pre-commit-config.yaml, poetry.lock, pyproject.toml, repomix.config.json
+- Files matching these patterns are excluded: **/**init**.py, tests/**, .gitignore, .pre-commit-config.yaml, poetry.lock, pyproject.toml, repomix.config.json
 - Files matching patterns in .gitignore are excluded
 - Files matching default ignore patterns are excluded
 - Empty lines have been removed from all files
 - Files are sorted by Git change count (files with more changes are at the bottom)
 
 # Directory Structure
+
 ```
 my_spdb/core.py
 my_spdb/models.py
@@ -48,6 +54,7 @@ spdb/provider.py
 # Files
 
 ## File: my_spdb/core.py
+
 ```python
 from my_spdb.models import Server, Application, Role
 from spdb.base import SPDB
@@ -58,6 +65,7 @@ class MySPDB(SPDB):
 ```
 
 ## File: my_spdb/models.py
+
 ```python
 from pydantic import BaseModel, Field
 from typing import List, Optional
@@ -83,6 +91,7 @@ class Server(BaseModel):
 ```
 
 ## File: spdb/base.py
+
 ```python
 from typing import TypeVar, Any, Union
 from pydantic import BaseModel
@@ -129,6 +138,7 @@ class SPDB:
 ```
 
 ## File: spdb/expander.py
+
 ```python
 from typing import TypeVar, Any
 from pydantic import BaseModel
@@ -180,6 +190,7 @@ class Expander:
 ```
 
 ## File: spdb/model.py
+
 ```python
 from pydantic import BaseModel as PydanticBaseModel
 class BaseModel(PydanticBaseModel):
@@ -187,6 +198,7 @@ class BaseModel(PydanticBaseModel):
 ```
 
 ## File: spdb/provider.py
+
 ```python
 # sharepoint_provider.py
 import logging

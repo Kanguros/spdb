@@ -15,7 +15,7 @@ class SharePointProvider:
         site_url: str,
         username: str,
         password: str,
-        verify: Optional[str] = None
+        verify: Optional[str] = None,
     ):
         """
         Initializes the SharePointProvider with authentication details and site URL.

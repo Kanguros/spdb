@@ -1,10 +1,13 @@
-from typing import TypeVar, Any
+from typing import Any, TypeVar
+
 from pydantic import BaseModel
 
 TModel = TypeVar("TModel", bound=BaseModel)
 
 
-def detect_related_fields(model_cls: type[TModel]) -> dict[str, type[BaseModel]]:
+def detect_related_fields(
+    model_cls: type[TModel],
+) -> dict[str, type[BaseModel]]:
     related_fields = {}
     for fname, field in model_cls.model_fields.items():
         annotation = field.annotation

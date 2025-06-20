@@ -1,3 +1,3 @@
 # SPDB
 
-Implement your own *relational database* on SharePoint Lists!
+Implement your own _relational database_ on SharePoint Lists!

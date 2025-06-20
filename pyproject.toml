@@ -5,16 +5,16 @@ description = ""
 authors = [
     { name = "Kamil Urbanek", email = "urbanek.kamil@gmail.com" },
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 
 [tool.poetry]
 readme = "README.md"
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.10"
 pydantic = "^2.10"
-office365-rest-python-client = "^2.6"
+office365-rest-python-client = "^2"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.8"
@@ -111,4 +111,3 @@ docstring-code-line-length = 72
     "S101",  # Use of `assert` detected
     "D",  # Missing docstring in public function
 ]
-
