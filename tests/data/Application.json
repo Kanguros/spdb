@@ -1,0 +1,57 @@
+[
+    {
+        "Id": 1,
+        "Name": "Inventory App",
+        "Version": "1.2.3",
+        "Language": "Python",
+        "Is Active": true,
+        "Owner": {
+            "Id": 1,
+            "Title": "Platform"
+        }
+    },
+    {
+        "Id": 2,
+        "Name": "Sales Portal",
+        "Version": "2.0",
+        "Language": "Java",
+        "Is Active": true,
+        "Owner": {
+            "Id": 2,
+            "Title": "DevOps"
+        }
+    },
+    {
+        "Id": 3,
+        "Name": "Analytics Engine",
+        "Version": "3.5.1",
+        "Language": "Scala",
+        "Is Active": false,
+        "Owner": {
+            "Id": 3,
+            "Title": "Analytics"
+        }
+    },
+    {
+        "Id": 4,
+        "Name": "Backup Service",
+        "Version": "1.0",
+        "Language": "Go",
+        "Is Active": true,
+        "Owner": {
+            "Id": 1,
+            "Title": "Platform"
+        }
+    },
+    {
+        "Id": 5,
+        "Name": "Monitoring Suite",
+        "Version": "5.4.2",
+        "Language": "Rust",
+        "Is Active": true,
+        "Owner": {
+            "Id": 2,
+            "Title": "DevOps"
+        }
+    }
+]

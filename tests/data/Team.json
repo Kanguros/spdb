@@ -1,0 +1,26 @@
+[
+    {
+        "Id": 1,
+        "Name": "Platform",
+        "Members": [
+            "alice",
+            "bob"
+        ]
+    },
+    {
+        "Id": 2,
+        "Name": "DevOps",
+        "Members": [
+            "carol",
+            "dave"
+        ]
+    },
+    {
+        "Id": 3,
+        "Name": "Analytics",
+        "Members": [
+            "eve",
+            "frank"
+        ]
+    }
+]

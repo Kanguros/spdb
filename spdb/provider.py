@@ -1,13 +1,13 @@
-# sharepoint_provider.py
-
 import logging
-from typing import Any, Optional
+from typing import Any
 
 from office365.runtime.auth.authentication_context import AuthenticationContext
 from office365.sharepoint.client_context import ClientContext
-from office365.sharepoint.listitems.caml import CamlQuery
 from office365.sharepoint.lists.list import List as SPlist
 
+
+class ProviderError(ValueError):
+    pass
 
 class SharePointProvider:
     def __init__(
@@ -15,7 +15,7 @@ class SharePointProvider:
         site_url: str,
         username: str,
         password: str,
-        verify: Optional[str] = None,
+        verify: str | None = None,
     ):
         """
         Initializes the SharePointProvider with authentication details and site URL.
@@ -30,8 +30,11 @@ class SharePointProvider:
         self.username = username
         self.password = password
         self.verify = verify
-        self._client_context = None
+
+        self._ctx = None
         self._authenticated = False
+
+        self._cache = {}
 
         if not self.username or not self.password:
             raise ValueError("Username and password must be provided")
@@ -41,84 +44,99 @@ class SharePointProvider:
         )
 
     @property
-    def client_context(self) -> ClientContext:
+    def ctx(self) -> ClientContext:
         """
         Returns the authenticated SharePoint client context.
 
         Returns:
             ClientContext: Authenticated SharePoint client context.
         """
-        if not self._client_context or not self._authenticated:
-            logging.debug("Authenticating SharePoint client context.")
-            self._authenticate()
-        return self._client_context
+        if not self._ctx or not self._authenticated:
+            logging.debug(
+                f"Attempting authentication for user '{self.username}' at '{self.site_url}'"
+            )
+            self._ctx = self._authenticate()
+            logging.info("SharePoint authentication successful.")
+            self._authenticated = True
+        return self._ctx
 
-    def _authenticate(self):
+    def _authenticate(self) -> ClientContext:
         """
         Authenticates with SharePoint using the provided credentials.
 
         Raises:
-            Exception: If authentication fails.
+            ProviderError: If authentication fails.
         """
         try:
-            logging.debug(
-                f"Attempting authentication for user '{self.username}' at '{self.site_url}'"
-            )
-            ctx_auth = AuthenticationContext(self.site_url)
-            if ctx_auth.acquire_token_for_user(self.username, self.password):
-                self._client_context = ClientContext(self.site_url, ctx_auth)
-                self._authenticated = True
-                logging.info("SharePoint authentication successful.")
-            else:
-                error_msg = ctx_auth.get_last_error()
-                logging.error(f"SharePoint authentication failed: {error_msg}")
-                raise Exception(f"Authentication failed: {error_msg}")
+            ctx_auth = AuthenticationContext(self.site_url, allow_ntlm=True)
+            if ctx_auth.with_credentials(self.username, self.password):
+                return ClientContext(self.site_url, ctx_auth)
+            error_msg = ctx_auth.get_last_error()
+            raise ProviderError(f"Authentication failed: {error_msg}")
         except Exception as e:
             logging.error(f"SharePoint authentication error: {str(e)}")
             raise
 
-    def get_list(self, list_name: str) -> SPlist:
+    def fetch_list(self, list_name: str) -> SPlist:
         """
-        Retrieves a SharePoint list by its name.
+        Fetches a SharePoint list by its name.
 
         Args:
-            list_name (str): The name of the SharePoint list.
+            list_name: The name of the SharePoint list.
 
         Returns:
-            SPlist: The SharePoint list object.
+            The SharePoint list object.
         """
         logging.debug(f"Fetching SharePoint list: '{list_name}'")
-        return self.client_context.web.lists.get_by_title(list_name)
+        return self.ctx.web.lists.get_by_title(list_name)
 
-    def get_list_items(self, list_name: str) -> list[dict[str, Any]]:
+    def fetch_list_items(
+        self,
+        list_name: str,
+        select: list[str] | None = None,
+        expand: list[str] | None = None,
+    ) -> list[dict[str, Any]]:
         """
-        Fetch all items from a SharePoint list. Uses in-memory cache if data was already retrieved.
+        Fetch all items from a SharePoint list.
 
         Args:
-            list_name (str): The title of the SharePoint list.
+            list_name: The title of the SharePoint list.
 
         Returns:
-            List[Dict[str, Any]]: A list of dictionaries representing SharePoint list items.
+            A list of dictionaries representing SharePoint list items.
+        """
+        sp_list = self.get_list(list_name)
+        select_arg = ["*"] if select is None else select
+        logging.debug(f"Fetching '{sp_list}' items with {select=} {expand=}")
+        items = sp_list.get().select(select_arg).expand(expand).execute_query()
+        return [item.properties for item in items]
+
+    def get_list_items(
+        self,
+        list_name: str,
+    ) -> list[dict[str, Any]]:
+        """
+        Get all items from a SharePoint list. Uses in-memory cache if data was already retrieved.
+
+        Args:
+            list_name: The title of the SharePoint list.
+
+        Returns:
+            A list of dictionaries representing SharePoint list items.
         """
         if list_name in self._cache:
             return self._cache[list_name]
+        items = self.fetch_list_items(list_name)
+        self._cache[list_name] = items
+        return items
 
-        sp_list = self.get_list(list_name)
-        items = sp_list.get_items(CamlQuery())
-        self.ctx.load(items)
-        self.ctx.execute_query()
-
-        parsed_items = [item.properties for item in items]
-        self._cache[list_name] = parsed_items
-        return parsed_items
-
-    def clear_cache(self, list_name: Optional[str] = None):
+    def clear_cache(self, list_name: str | None = None) -> None:
         """
         Clears the internal cache.
 
         Args:
-            list_name (Optional[str]): If provided, only clears the cache for the given list.
-                                       If None, clears the entire cache.
+            list_name: If provided, only clears the cache for the given list.
+                        If None, clears the entire cache.
         """
         if list_name:
             self._cache.pop(list_name, None)

@@ -1,0 +1,52 @@
+[
+    {
+        "Id": 1,
+        "Name": "Web Server",
+        "Description": "Handles HTTP requests"
+    },
+    {
+        "Id": 2,
+        "Name": "Database",
+        "Description": "Stores persistent data"
+    },
+    {
+        "Id": 3,
+        "Name": "Cache",
+        "Description": "Temporary storage for fast access"
+    },
+    {
+        "Id": 4,
+        "Name": "Load Balancer",
+        "Description": "Distributes traffic"
+    },
+    {
+        "Id": 5,
+        "Name": "Monitoring",
+        "Description": "System monitoring and alerting"
+    },
+    {
+        "Id": 6,
+        "Name": "Logging",
+        "Description": "Logs system events"
+    },
+    {
+        "Id": 7,
+        "Name": "Search",
+        "Description": "Handles search queries"
+    },
+    {
+        "Id": 8,
+        "Name": "Analytics",
+        "Description": "Processes analytics data"
+    },
+    {
+        "Id": 9,
+        "Name": "Backup",
+        "Description": "Manages backups"
+    },
+    {
+        "Id": 10,
+        "Name": "Messaging",
+        "Description": "Handles asynchronous messaging"
+    }
+]

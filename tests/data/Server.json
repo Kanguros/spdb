@@ -1,0 +1,406 @@
+[
+    {
+        "Id": 1,
+        "Hostname": "srv001",
+        "Ip Address": "192.168.1.1",
+        "Operating System": "Ubuntu 22.04",
+        "Application": {
+            "Id": 1,
+            "Title": "Inventory App"
+        },
+        "Roles": [
+            {
+                "Id": 1,
+                "Title": "Web Server"
+            },
+            {
+                "Id": 2,
+                "Title": "Database"
+            }
+        ],
+        "Location": "DC1",
+        "Is Virtual": true
+    },
+    {
+        "Id": 2,
+        "Hostname": "srv002",
+        "Ip Address": "192.168.1.2",
+        "Operating System": "Windows Server 2019",
+        "Application": {
+            "Id": 2,
+            "Title": "Sales Portal"
+        },
+        "Roles": [
+            {
+                "Id": 1,
+                "Title": "Web Server"
+            },
+            {
+                "Id": 4,
+                "Title": "Load Balancer"
+            }
+        ],
+        "Location": "DC1",
+        "Is Virtual": false
+    },
+    {
+        "Id": 3,
+        "Hostname": "srv003",
+        "Ip Address": "192.168.1.3",
+        "Operating System": "Ubuntu 20.04",
+        "Application": {
+            "Id": 3,
+            "Title": "Analytics Engine"
+        },
+        "Roles": [
+            {
+                "Id": 3,
+                "Title": "Cache"
+            },
+            {
+                "Id": 8,
+                "Title": "Analytics"
+            }
+        ],
+        "Location": "DC2",
+        "Is Virtual": true
+    },
+    {
+        "Id": 4,
+        "Hostname": "srv004",
+        "Ip Address": "192.168.1.4",
+        "Operating System": "CentOS 7",
+        "Application": {
+            "Id": 4,
+            "Title": "Backup Service"
+        },
+        "Roles": [
+            {
+                "Id": 9,
+                "Title": "Backup"
+            },
+            {
+                "Id": 6,
+                "Title": "Logging"
+            }
+        ],
+        "Location": "DC1",
+        "Is Virtual": false
+    },
+    {
+        "Id": 5,
+        "Hostname": "srv005",
+        "Ip Address": "192.168.1.5",
+        "Operating System": "Debian 11",
+        "Application": {
+            "Id": 5,
+            "Title": "Monitoring Suite"
+        },
+        "Roles": [
+            {
+                "Id": 5,
+                "Title": "Monitoring"
+            },
+            {
+                "Id": 6,
+                "Title": "Logging"
+            }
+        ],
+        "Location": "DC2",
+        "Is Virtual": true
+    },
+    {
+        "Id": 6,
+        "Hostname": "srv006",
+        "Ip Address": "192.168.1.6",
+        "Operating System": "Ubuntu 22.04",
+        "Application": {
+            "Id": 1,
+            "Title": "Inventory App"
+        },
+        "Roles": [
+            {
+                "Id": 1,
+                "Title": "Web Server"
+            }
+        ],
+        "Location": "DC1",
+        "Is Virtual": true
+    },
+    {
+        "Id": 7,
+        "Hostname": "srv007",
+        "Ip Address": "192.168.1.7",
+        "Operating System": "Ubuntu 22.04",
+        "Application": {
+            "Id": 1,
+            "Title": "Inventory App"
+        },
+        "Roles": [
+            {
+                "Id": 2,
+                "Title": "Database"
+            }
+        ],
+        "Location": "DC2",
+        "Is Virtual": false
+    },
+    {
+        "Id": 8,
+        "Hostname": "srv008",
+        "Ip Address": "192.168.1.8",
+        "Operating System": "Debian 11",
+        "Application": {
+            "Id": 2,
+            "Title": "Sales Portal"
+        },
+        "Roles": [
+            {
+                "Id": 4,
+                "Title": "Load Balancer"
+            }
+        ],
+        "Location": "DC2",
+        "Is Virtual": true
+    },
+    {
+        "Id": 9,
+        "Hostname": "srv009",
+        "Ip Address": "192.168.1.9",
+        "Operating System": "Windows Server 2016",
+        "Application": {
+            "Id": 2,
+            "Title": "Sales Portal"
+        },
+        "Roles": [
+            {
+                "Id": 1,
+                "Title": "Web Server"
+            },
+            {
+                "Id": 10,
+                "Title": "Messaging"
+            }
+        ],
+        "Location": "DC1",
+        "Is Virtual": false
+    },
+    {
+        "Id": 10,
+        "Hostname": "srv010",
+        "Ip Address": "192.168.1.10",
+        "Operating System": "Ubuntu 20.04",
+        "Application": {
+            "Id": 5,
+            "Title": "Monitoring Suite"
+        },
+        "Roles": [
+            {
+                "Id": 5,
+                "Title": "Monitoring"
+            },
+            {
+                "Id": 6,
+                "Title": "Logging"
+            }
+        ],
+        "Location": "DC1",
+        "Is Virtual": true
+    },
+    {
+        "Id": 11,
+        "Hostname": "srv011",
+        "Ip Address": "192.168.1.11",
+        "Operating System": "Ubuntu 20.04",
+        "Application": {
+            "Id": 3,
+            "Title": "Analytics Engine"
+        },
+        "Roles": [
+            {
+                "Id": 3,
+                "Title": "Cache"
+            }
+        ],
+        "Location": "DC2",
+        "Is Virtual": true
+    },
+    {
+        "Id": 12,
+        "Hostname": "srv012",
+        "Ip Address": "192.168.1.12",
+        "Operating System": "Ubuntu 22.04",
+        "Application": {
+            "Id": 3,
+            "Title": "Analytics Engine"
+        },
+        "Roles": [
+            {
+                "Id": 8,
+                "Title": "Analytics"
+            }
+        ],
+        "Location": "DC1",
+        "Is Virtual": false
+    },
+    {
+        "Id": 13,
+        "Hostname": "srv013",
+        "Ip Address": "192.168.1.13",
+        "Operating System": "Debian 11",
+        "Application": {
+            "Id": 4,
+            "Title": "Backup Service"
+        },
+        "Roles": [
+            {
+                "Id": 9,
+                "Title": "Backup"
+            }
+        ],
+        "Location": "DC1",
+        "Is Virtual": true
+    },
+    {
+        "Id": 14,
+        "Hostname": "srv014",
+        "Ip Address": "192.168.1.14",
+        "Operating System": "Ubuntu 20.04",
+        "Application": {
+            "Id": 5,
+            "Title": "Monitoring Suite"
+        },
+        "Roles": [
+            {
+                "Id": 5,
+                "Title": "Monitoring"
+            }
+        ],
+        "Location": "DC2",
+        "Is Virtual": false
+    },
+    {
+        "Id": 15,
+        "Hostname": "srv015",
+        "Ip Address": "192.168.1.15",
+        "Operating System": "Ubuntu 22.04",
+        "Application": {
+            "Id": 1,
+            "Title": "Inventory App"
+        },
+        "Roles": [
+            {
+                "Id": 1,
+                "Title": "Web Server"
+            }
+        ],
+        "Location": "DC1",
+        "Is Virtual": true
+    },
+    {
+        "Id": 16,
+        "Hostname": "srv016",
+        "Ip Address": "192.168.1.16",
+        "Operating System": "Windows Server 2019",
+        "Application": {
+            "Id": 2,
+            "Title": "Sales Portal"
+        },
+        "Roles": [
+            {
+                "Id": 4,
+                "Title": "Load Balancer"
+            },
+            {
+                "Id": 10,
+                "Title": "Messaging"
+            }
+        ],
+        "Location": "DC1",
+        "Is Virtual": false
+    },
+    {
+        "Id": 17,
+        "Hostname": "srv017",
+        "Ip Address": "192.168.1.17",
+        "Operating System": "Debian 11",
+        "Application": {
+            "Id": 3,
+            "Title": "Analytics Engine"
+        },
+        "Roles": [
+            {
+                "Id": 8,
+                "Title": "Analytics"
+            }
+        ],
+        "Location": "DC2",
+        "Is Virtual": true
+    },
+    {
+        "Id": 18,
+        "Hostname": "srv018",
+        "Ip Address": "192.168.1.18",
+        "Operating System": "Ubuntu 22.04",
+        "Application": {
+            "Id": 4,
+            "Title": "Backup Service"
+        },
+        "Roles": [
+            {
+                "Id": 9,
+                "Title": "Backup"
+            },
+            {
+                "Id": 6,
+                "Title": "Logging"
+            }
+        ],
+        "Location": "DC1",
+        "Is Virtual": false
+    },
+    {
+        "Id": 19,
+        "Hostname": "srv019",
+        "Ip Address": "192.168.1.19",
+        "Operating System": "Ubuntu 22.04",
+        "Application": {
+            "Id": 5,
+            "Title": "Monitoring Suite"
+        },
+        "Roles": [
+            {
+                "Id": 5,
+                "Title": "Monitoring"
+            },
+            {
+                "Id": 6,
+                "Title": "Logging"
+            }
+        ],
+        "Location": "DC2",
+        "Is Virtual": true
+    },
+    {
+        "Id": 20,
+        "Hostname": "srv020",
+        "Ip Address": "192.168.1.20",
+        "Operating System": "Ubuntu 22.04",
+        "Application": {
+            "Id": 1,
+            "Title": "Inventory App"
+        },
+        "Roles": [
+            {
+                "Id": 1,
+                "Title": "Web Server"
+            },
+            {
+                "Id": 2,
+                "Title": "Database"
+            }
+        ],
+        "Location": "DC1",
+        "Is Virtual": false
+    }
+]

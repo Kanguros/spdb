@@ -1,71 +1,99 @@
-from typing import TypeVar
-
-from pydantic import BaseModel
-
-from spdb.expander import Expander
+from typing import Any, TypeVar
 from spdb.provider import SharePointProvider
+from spdb.model import BaseModel
 
-TModel = TypeVar("TModel", bound=BaseModel)
+T = TypeVar("T", bound=BaseModel)
 
 
 class SPDB:
     """
-    SPDB allows reading SharePoint lists as Pydantic models with lazy and full expansion.
+    SPDB allows reading SharePoint lists as Pydantic models, supporting both lazy and full expansion of related
+    fields. Related fields are detected automatically via Pydantic model annotations.
 
     Example usage:
         spdb = SPDB(provider, models=[Device, Application])
-
-        devices = spdb.get(Device)  # Not expanded
-        devices[0].application  # -> str
-
-        devices_exp = spdb.get(Device, expand=True)
-        devices_exp[0].application.name  # -> expanded Application model
+        devices = spdb.get_models(Device)                      # Lazy: related fields remain identifiers
+        devices_full = spdb.get_models(Device, expanded=True)  # Full: related fields are hydrated models
     """
 
+    default_provider: type[SharePointProvider] = SharePointProvider
+
     def __init__(
-        self, provider: SharePointProvider, models: list[type[BaseModel]]
+        self,
+        provider: SharePointProvider,
+        models: list[type[BaseModel]],
     ):
         self.provider = provider
-        self.models: dict[str, type[BaseModel]] = {
-            m.__name__: m for m in models
-        }
+        self._models: dict[str, type[BaseModel]] = {m.__name__: m for m in models}
         self._cache: dict[str, list[BaseModel]] = {}
+        self._lookups: dict[str, dict[Any, BaseModel]] = {}
 
-    def get_model(
-        self, model_cls: type[TModel], expand: bool = False
-    ) -> list[TModel]:
-        model_name = model_cls.__name__
+    def get(
+        self,
+        model_cls: type[T],
+        full: bool = False,
+    ) -> list[T]:
+        """
+        Retrieve list of models of type `model_cls`.
 
-        if model_name not in self._cache:
-            raw = self.provider.get_data(model_name)
-            expander = Expander(
-                model_cls, raw, related_data=self._get_related_data()
-            )
-            self._cache[model_name] = expander.expand_all(expand=False)
+        Args:
+            model_cls: The Pydantic model class to load.
+            full: If True, expand and hydrate all related fields.
 
-        if not expand:
-            return self._cache[model_name]  # type: ignore
+        Returns:
+            list of Pydantic model instances.
+        """
+        name = model_cls.__name__
+        if name not in self._cache:
+            self._cache[name] = self._load(model_cls)
+        items: list[T] = self._cache[name]  # type: ignore
+        return self._expand(items, model_cls) if full else items
 
-        # Perform expansion now
-        expander = Expander(
-            model_cls,
-            [m.model_dump() for m in self._cache[model_name]],
-            self._get_related_data(),
-        )
-        return expander.expand_all(expand=True)
+    def get_models(
+        self,
+        name: type[T],
+        expanded: bool = False,
+    ) -> list[T]:
+        """
+        Alias for get().
 
-    def _get_related_data(self) -> dict[str, dict[str, BaseModel]]:
-        related_data = {}
+        Args:
+            name: The model class.
+            expanded: If True, fully expand relations.
+        """
+        return self.get(name, full=expanded)
 
-        for model_name, model_cls in self.models.items():
+    def _load(self, model_cls: type[T]) -> list[T]:
+        """Load raw data from SharePoint into Pydantic models without expanding relations."""
+        raw = self.provider.get_data(model_cls.__name__)
+        return [model_cls(**item) for item in raw]
+
+    def _ensure_lookups(self):
+        for model_name, model_cls in self._models.items():
             if model_name not in self._cache:
-                raw = self.provider.get_data(model_name)
-                expander = Expander(model_cls, raw, related_data={})
-                self._cache[model_name] = expander.expand_all(expand=False)
+                self._cache[model_name] = self._load(model_cls)
+            if model_name not in self._lookups:
+                self._lookups[model_name] = {
+                    getattr(obj, 'name', getattr(obj, 'id')): obj for obj in self._cache[model_name]
+                }
 
-            by_name = {
-                m.model_dump().get("name"): m for m in self._cache[model_name]
-            }
-            related_data[model_name] = by_name
+    def _expand(self, items: list[T], model_cls: type[T]) -> list[T]:
+        """Fully expand related model fields based on identifier lookups."""
+        self._ensure_lookups()
 
-        return related_data
+        relations = model_cls.get_relation_fields()
+        expanded: list[T] = []
+
+        for obj in items:
+            updates: dict[str, Any] = {}
+            data = obj.__dict__
+
+            for field_name, rel_model_name in relations.items():
+                key = data.get(field_name)
+                lookup = self._lookups.get(rel_model_name, {})
+
+                if key in lookup:
+                    updates[field_name] = lookup[key]
+
+            expanded.append(obj.model_copy(update=updates) if updates else obj)
+        return expanded
