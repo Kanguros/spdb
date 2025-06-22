@@ -7,7 +7,7 @@ from pydantic import ConfigDict
 class BaseModel(PydanticBaseModel):
     """Base Model"""
 
-    list_name: ClassVar[str | None] = None
+    _list_name: ClassVar[str | None] = None
     _relation_fields: ClassVar[dict[str, str]] = {}
 
     model_config = ConfigDict(
@@ -20,7 +20,7 @@ class BaseModel(PydanticBaseModel):
 
     @classmethod
     def get_list_name(cls) -> str:
-        return cls.list_name or cls.__name__
+        return cls._list_name or cls.__name__
 
     @classmethod
     def get_relation_fields(cls) -> dict[str, str]:

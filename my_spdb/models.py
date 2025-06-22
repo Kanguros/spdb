@@ -1,4 +1,6 @@
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from spdb.model import BaseModel
 
 
 class Role(BaseModel):
