@@ -10,7 +10,9 @@ class MockSharePointProvider(SharePointProvider):
     def __init__(self, mock_data_dir: str):
         self.mock_data_dir = Path(mock_data_dir)
         self._cache: dict[str, list[dict[str, Any]]] = {}
-        logging.debug(f"Initialized MockSharePointProvider with data from {self.mock_data_dir}")
+        logging.debug(
+            f"Initialized MockSharePointProvider with data from {self.mock_data_dir}"
+        )
 
     def fetch_list_items(
         self,
@@ -28,7 +30,9 @@ class MockSharePointProvider(SharePointProvider):
         if not file_path.exists():
             raise FileNotFoundError(f"Mock data file not found: {file_path}")
 
-        logging.debug(f"Loading mock data for list '{list_name}' from {file_path}")
+        logging.debug(
+            f"Loading mock data for list '{list_name}' from {file_path}"
+        )
 
         with file_path.open("r", encoding="utf-8") as f:
             data = json.load(f)

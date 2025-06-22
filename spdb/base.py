@@ -1,8 +1,7 @@
-from typing import Any, TypeVar
-from spdb.provider import SharePointProvider
-from spdb.model import BaseModel
+from typing import Any
 
-T = TypeVar("T", bound=BaseModel)
+from spdb.model import BaseModel, TModel
+from spdb.provider import SharePointProvider
 
 
 class SPDB:
@@ -24,15 +23,17 @@ class SPDB:
         models: list[type[BaseModel]],
     ):
         self.provider = provider
-        self._models: dict[str, type[BaseModel]] = {m.__name__: m for m in models}
+        self._models: dict[str, type[BaseModel]] = {
+            m.__name__: m for m in models
+        }
         self._cache: dict[str, list[BaseModel]] = {}
         self._lookups: dict[str, dict[Any, BaseModel]] = {}
 
-    def get(
+    def get_models(
         self,
-        model_cls: type[T],
-        full: bool = False,
-    ) -> list[T]:
+        model_cls: type[TModel],
+        expanded: bool = False,
+    ) -> list[TModel]:
         """
         Retrieve list of models of type `model_cls`.
 
@@ -46,26 +47,14 @@ class SPDB:
         name = model_cls.__name__
         if name not in self._cache:
             self._cache[name] = self._load(model_cls)
-        items: list[T] = self._cache[name]  # type: ignore
-        return self._expand(items, model_cls) if full else items
+        items = self._cache[name]
+        if not expanded:
+            return items
+        return self._expand(items, model_cls)
 
-    def get_models(
-        self,
-        name: type[T],
-        expanded: bool = False,
-    ) -> list[T]:
-        """
-        Alias for get().
-
-        Args:
-            name: The model class.
-            expanded: If True, fully expand relations.
-        """
-        return self.get(name, full=expanded)
-
-    def _load(self, model_cls: type[T]) -> list[T]:
+    def _load(self, model_cls: type[TModel]) -> list[TModel]:
         """Load raw data from SharePoint into Pydantic models without expanding relations."""
-        raw = self.provider.get_data(model_cls.__name__)
+        raw = self.provider.get_list_items(model_cls.get_list_name())
         return [model_cls(**item) for item in raw]
 
     def _ensure_lookups(self):
@@ -74,15 +63,18 @@ class SPDB:
                 self._cache[model_name] = self._load(model_cls)
             if model_name not in self._lookups:
                 self._lookups[model_name] = {
-                    getattr(obj, 'name', getattr(obj, 'id')): obj for obj in self._cache[model_name]
+                    getattr(obj, "name", obj.id): obj
+                    for obj in self._cache[model_name]
                 }
 
-    def _expand(self, items: list[T], model_cls: type[T]) -> list[T]:
+    def _expand(
+        self, items: list[TModel], model_cls: type[TModel]
+    ) -> list[TModel]:
         """Fully expand related model fields based on identifier lookups."""
         self._ensure_lookups()
 
         relations = model_cls.get_relation_fields()
-        expanded: list[T] = []
+        expanded: list[TModel] = []
 
         for obj in items:
             updates: dict[str, Any] = {}

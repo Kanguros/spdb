@@ -9,6 +9,7 @@ from office365.sharepoint.lists.list import List as SPlist
 class ProviderError(ValueError):
     pass
 
+
 class SharePointProvider:
     def __init__(
         self,
@@ -105,7 +106,7 @@ class SharePointProvider:
         Returns:
             A list of dictionaries representing SharePoint list items.
         """
-        sp_list = self.get_list(list_name)
+        sp_list = self.fetch_list(list_name)
         select_arg = ["*"] if select is None else select
         logging.debug(f"Fetching '{sp_list}' items with {select=} {expand=}")
         items = sp_list.get().select(select_arg).expand(expand).execute_query()

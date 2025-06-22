@@ -19,7 +19,7 @@ class Application(BaseModel):
     version: str | None = Field(default=None, alias="Version")
     language: str | None = Field(default=None, alias="Language")
     is_active: bool = Field(default=True, alias="Is Active")
-    owner: Team | None = Field(default=None, alias="Owner")
+    owner: Team | str | None = Field(default=None, alias="Owner")
 
 
 class Server(BaseModel):
@@ -27,7 +27,7 @@ class Server(BaseModel):
     hostname: str = Field(..., alias="Hostname")
     ip_address: str | None = Field(default=None, alias="Ip Address")
     operating_system: str | None = Field(None, alias="Operating System")
-    application: Application = Field(..., alias="Application")
-    roles: list[Role] = Field(default_factory=list, alias="Roles")
+    application: Application | str = Field(..., alias="Application")
+    roles: list[Role] | list[str] = Field(default_factory=list, alias="Roles")
     location: str | None = Field(default=None, alias="Location")
     is_virtual: bool = Field(default=False, alias="Is Virtual")

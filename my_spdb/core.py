@@ -12,5 +12,9 @@ class MySPDB(SPDB):
         self.username = username
         self.password = password
         self.verify = verify
-        super().__init__(SharePointProvider(self.url, self.username, password, verify=self.verify), self.models)
-
+        super().__init__(
+            SharePointProvider(
+                self.url, self.username, password, verify=self.verify
+            ),
+            self.models,
+        )
