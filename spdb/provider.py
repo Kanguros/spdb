@@ -108,7 +108,7 @@ class SharePointProvider:
         """
         sp_list = self.fetch_list(list_name)
         select_arg = ["*"] if select is None else select
-        logging.debug(f"Fetching '{sp_list}' items with {select=} {expand=}")
+        logging.debug(f"Fetching from '{sp_list}' items with {select=} {expand=}")
         items = sp_list.get().select(select_arg).expand(expand).execute_query()
         return [item.properties for item in items]
 
