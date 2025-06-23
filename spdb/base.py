@@ -68,8 +68,17 @@ class SPDB:
         Returns:
             List of model instances without expanded relations.
         """
-        items = self.provider.get_list_items(model_cls.get_list_name())
-        return [model_cls(**item) for item in items]
+        raw_items = self.provider.get_list_items(model_cls.get_list_name())
+        loaded: list[TModel] = []
+
+        for record in raw_items:
+            instance = model_cls(**record)
+            for rel_field in model_cls.get_relation_fields().keys():
+                value = getattr(instance, rel_field)
+                instance.__dict__[rel_field] = value
+            loaded.append(instance)
+
+        return loaded
 
     def _ensure_lookups(self) -> None:
         """Build lookup dictionaries for all registered models."""
@@ -90,12 +99,13 @@ class SPDB:
         for obj in items:
             updates = {}
             for field_name, rel_model_name in relations.items():
-                raw_val = getattr(obj, field_name)               # [1]
+                raw_val = getattr(obj, field_name)  # [1]
                 lookup = self._lookups.get(rel_model_name, {})
 
                 if isinstance(raw_val, list):
                     expanded_list = [
-                        lookup[item_key] for item_key in raw_val
+                        lookup[item_key]
+                        for item_key in raw_val
                         if item_key in lookup
                     ]
                     if expanded_list:
@@ -104,9 +114,7 @@ class SPDB:
                     updates[field_name] = lookup[raw_val]
 
             if updates:
-                obj = obj.model_copy(update=updates)            # [2]
+                obj = obj.model_copy(update=updates)  # [2]
             expanded_items.append(obj)
 
         return expanded_items
-
-
