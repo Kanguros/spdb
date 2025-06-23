@@ -1,4 +1,6 @@
+from types import UnionType
 from typing import (
+    Annotated,
     Any,
     ClassVar,
     TypeVar,
@@ -11,22 +13,37 @@ from pydantic import BeforeValidator, ConfigDict
 
 
 def extract_model_class(
-    field_annotation: Any,
+    annotation: Any,
 ) -> type[PydanticBaseModel] | None:
-    """Extract related model class from annotation, including handling for list[BaseModel]."""
-    origin = get_origin(field_annotation)
-    if origin is list:
-        args = get_args(field_annotation)
-        if (
-            args
-            and isinstance(args[0], type)
-            and issubclass(args[0], PydanticBaseModel)
-        ):
-            return args[0]
-    elif isinstance(field_annotation, type) and issubclass(
-        field_annotation, PydanticBaseModel
+    """Identify and return a Pydantic BaseModel subclass from a type annotation.
+
+    This function recursively inspects `annotation`, unwrapping
+    `Annotated`, `Union`/`UnionType`, and `list` to find and return the
+    first subclass of `PydanticBaseModel`. If no such subclass is found,
+    returns None.
+
+    Args:
+        annotation: A type annotation that may include nested wrappers.
+
+    Returns:
+        The Pydantic model class found in the annotation or None.
+    """
+    origin = get_origin(annotation)
+    args = get_args(annotation)
+    if isinstance(annotation, type) and issubclass(
+        annotation, PydanticBaseModel
     ):
-        return field_annotation
+        return annotation
+    if origin is Annotated and args:
+        return extract_model_class(args[0])
+    if origin is UnionType:
+        for arg in args:
+            related = extract_model_class(arg)
+            if related:
+                return related
+        return None
+    if origin is list and args:
+        return extract_model_class(args[0])
     return None
 
 
@@ -62,7 +79,6 @@ class BaseModel(PydanticBaseModel):
 
 
 TModel = TypeVar("TModel", bound=BaseModel)
-ValueType = TypeVar("ValueType")
 
 
 def lookup(value: Any) -> Any:

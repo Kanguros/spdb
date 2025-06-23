@@ -36,7 +36,7 @@ class Server(BaseModel):
     ip_address: str | None = Field(default=None, alias="Ip Address")
     operating_system: str | None = Field(None, alias="Operating System")
     roles: Annotated[
-        list[Role] | list[str],
+        list[str] | list[Role],
         Field(default_factory=list, alias="Roles"),
         LookupField,
     ]

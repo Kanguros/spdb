@@ -71,8 +71,8 @@ class SPDB:
         raw_items = self.provider.get_list_items(model_cls.get_list_name())
         loaded: list[TModel] = []
 
-        for record in raw_items:
-            instance = model_cls(**record)
+        for item_data in raw_items:
+            instance = model_cls(**item_data)
             for rel_field in model_cls.get_relation_fields().keys():
                 value = getattr(instance, rel_field)
                 instance.__dict__[rel_field] = value
@@ -94,14 +94,14 @@ class SPDB:
     def _expand(self, items, model_cls):
         self._ensure_lookups()
         relations = model_cls.get_relation_fields()
+        print(f"Expanding {model_cls=} {relations=}")
         expanded_items = []
 
         for obj in items:
             updates = {}
             for field_name, rel_model_name in relations.items():
-                raw_val = getattr(obj, field_name)  # [1]
+                raw_val = getattr(obj, field_name)
                 lookup = self._lookups.get(rel_model_name, {})
-
                 if isinstance(raw_val, list):
                     expanded_list = [
                         lookup[item_key]
@@ -114,7 +114,7 @@ class SPDB:
                     updates[field_name] = lookup[raw_val]
 
             if updates:
-                obj = obj.model_copy(update=updates)  # [2]
+                obj = obj.model_copy(update=updates)
             expanded_items.append(obj)
 
         return expanded_items

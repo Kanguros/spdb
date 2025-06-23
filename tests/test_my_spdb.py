@@ -9,6 +9,7 @@ def check_expanded_server(server: Server):
     if server.application:
         assert isinstance(server.application, Application)
     if server.roles:
+        print(f"{server.roles=}")
         assert all(isinstance(role, Role) for role in server.roles)
 
 
