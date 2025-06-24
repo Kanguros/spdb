@@ -13,6 +13,6 @@ class MockMySPDB(MySPDB):
 
 
 @pytest.fixture(scope="module")
-def my_mock_spdb():
+def my_mock_spdb() -> MockMySPDB:
     data_path = Path(__file__).parent / "data"
     return MockMySPDB(data_path)

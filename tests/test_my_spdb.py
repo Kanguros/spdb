@@ -2,8 +2,6 @@ import pytest
 
 from my_spdb.models import Application, Role, Server, Team
 
-MyModels = {Server: 20, Application: 5, Role: 10, Team: 3}
-
 
 def check_expanded_server(server: Server):
     if server.application:
@@ -13,24 +11,29 @@ def check_expanded_server(server: Server):
         assert all(isinstance(role, Role) for role in server.roles)
 
 
+MyModels = [
+    {"model": Server, "count": 20, "check_func": check_expanded_server},
+    {"model": Application, "count": 5, "check_func": None},
+    {"model": Role, "count": 10, "check_func": None},
+    {"model": Team, "count": 3, "check_func": None},
+]
+
+
 def test_myspdb_models(my_mock_spdb):
-    assert my_mock_spdb.models == list(MyModels.keys())
+    assert my_mock_spdb.models == [m["model"] for m in MyModels]
 
 
-@pytest.mark.parametrize("name,count", MyModels.items())
-def test_get_models(name: str, count: int, my_mock_spdb):
-    items = my_mock_spdb.get_models(name, expanded=False)
-    assert items and len(items) == count
+@pytest.mark.parametrize("my_model", MyModels)
+def test_get_models(my_model, my_mock_spdb):
+    items = my_mock_spdb.get_models(my_model["model"], expanded=False)
+    assert items and len(items) == my_model["count"]
 
 
-@pytest.mark.parametrize(
-    "model_cls,count,check_func",
-    [
-        (Server, 20, check_expanded_server),
-    ],
-)
-def test_get_server_models_expanded(my_mock_spdb, model_cls, count, check_func):
-    items = my_mock_spdb.get_models(model_cls, expanded=True)
-    assert items and len(items) == count
-    for item in items:
-        check_func(item)
+@pytest.mark.parametrize("my_model", MyModels)
+def test_get_server_models_expanded(my_model, my_mock_spdb):
+    items = my_mock_spdb.get_models(my_model["model"], expanded=True)
+    assert items and len(items) == my_model["count"]
+    check_func = my_model["check_func"]
+    if check_func is not None:
+        for item in items:
+            check_func(item)
