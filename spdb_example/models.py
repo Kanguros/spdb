@@ -8,7 +8,7 @@ from spdb.model import BaseModel, LookupField
 class Role(BaseModel):
     id: Annotated[int, Field(..., alias="Id")]
     name: Annotated[str, Field(..., alias="Name")]
-    description: Annotated[str | None, Field(None, alias="Description")]
+    description: Annotated[str, Field("", alias="Description")]
 
 
 class Team(BaseModel):

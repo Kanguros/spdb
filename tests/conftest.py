@@ -2,8 +2,8 @@ from pathlib import Path
 
 import pytest
 
-from my_spdb.core import MySPDB
 from spdb.mocks import MockSharePointProvider
+from spdb_example.core import MySPDB
 
 
 class MockMySPDB(MySPDB):

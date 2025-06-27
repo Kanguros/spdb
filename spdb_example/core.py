@@ -1,6 +1,6 @@
-from my_spdb.models import Application, Role, Server, Team
 from spdb.base import SPDB
 from spdb.provider import SharePointProvider
+from spdb_example.models import Application, Role, Server, Team
 
 
 class MySPDB(SPDB):
