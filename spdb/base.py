@@ -98,23 +98,31 @@ class SPDB:
         expanded_items = []
 
         for obj in items:
-            updates = {}
-            for field_name, rel_model_name in relations.items():
-                raw_val = getattr(obj, field_name)
-                lookup = self._lookups.get(rel_model_name, {})
-                if isinstance(raw_val, list):
-                    expanded_list = [
-                        lookup[item_key]
-                        for item_key in raw_val
-                        if item_key in lookup
-                    ]
-                    if expanded_list:
-                        updates[field_name] = expanded_list
-                elif raw_val in lookup:
-                    updates[field_name] = lookup[raw_val]
-
+            updates = self._expand_object_relations(obj, relations)
             if updates:
                 obj = obj.model_copy(update=updates)
             expanded_items.append(obj)
 
         return expanded_items
+
+    def _expand_object_relations(self, obj, relations):
+        """Expand all relation fields for a single object."""
+        updates = {}
+        for field_name, rel_model_name in relations.items():
+            raw_val = getattr(obj, field_name)
+            lookup = self._lookups.get(rel_model_name, {})
+            expanded = self._expand_field(raw_val, lookup)
+            if expanded is not None:
+                updates[field_name] = expanded
+        return updates
+
+    def _expand_field(self, raw_val, lookup):
+        """Expand a single relation field value using the lookup."""
+        if isinstance(raw_val, list):
+            expanded_list = [
+                lookup[item_key] for item_key in raw_val if item_key in lookup
+            ]
+            return expanded_list if expanded_list else None
+        if raw_val in lookup:
+            return lookup[raw_val]
+        return None
