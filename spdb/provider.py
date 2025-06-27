@@ -73,7 +73,7 @@ class SharePointProvider:
             if ctx_auth.with_credentials(self.username, self.password):
                 return ClientContext(self.site_url, ctx_auth)
             error_msg = ctx_auth.get_last_error()
-            raise ProviderError(f"Authentication failed: {error_msg}")
+            raise ProviderError(f"Authentication failed: {error_msg}")  # noqa: TRY301
         except Exception as e:
             logging.error(f"SharePoint authentication error: {str(e)}")
             raise
@@ -108,7 +108,9 @@ class SharePointProvider:
         """
         sp_list = self.fetch_list(list_name)
         select_arg = ["*"] if select is None else select
-        logging.debug(f"Fetching from '{sp_list}' items with {select=} {expand=}")
+        logging.debug(
+            f"Fetching from '{sp_list}' items with {select=} {expand=}"
+        )
         items = sp_list.get().select(select_arg).expand(expand).execute_query()
         return [item.properties for item in items]
 

@@ -109,16 +109,19 @@ PLACEHOLDER
             [],
             True,
         ),
-        # Code block with missing file attribute
+        # Code block with missing file attribute (should be ignored, not error)
         (
             """
+Not reference
 ```python
-PLACEHOLDER
+PLACEHOLDER_NO_FILE
 ```
+
+After text
 """,
+            ["Not reference", "PLACEHOLDER_NO_FILE", "After text"],
             [],
-            [],
-            True,
+            False,  # No error expected
         ),
         # Code block with negative line numbers
         (

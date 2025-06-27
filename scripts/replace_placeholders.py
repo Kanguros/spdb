@@ -5,8 +5,7 @@ from pathlib import Path
 doc = """
 Pattern to find code blocks like this:
 
-```
-python file=spdb/model.py line_start=10 line_end=20
+```python file=spdb/model.py line_start=10 line_end=20
 ```
 
 Usage:
@@ -15,7 +14,8 @@ python update_readme.py FILE1 [FILE2 ...]
 
 """
 
-pattern = r"```(\w+)(?:\s+file=([^\s]+)(?:\s+line_start=(-?\d+))?(?:\s+line_end=(-?\d+))?)?\n(.*?)```"
+# Only match code blocks with file= attribute
+pattern = r"```(\w+)\s+file=([^\s]+)(?:\s+line_start=(-?\d+))?(?:\s+line_end=(-?\d+))?\n(.*?)```"
 
 
 def replace_code_block(match):
@@ -32,6 +32,10 @@ def replace_code_block(match):
     if not code_path.exists():
         print(f"Code file {code_file_path} does not exist.", file=sys.stderr)
         sys.exit(1)
+    if not language:
+        language = ""
+    else:
+        language = language.strip().replace("`", "")
     file_lines = code_path.read_text().splitlines()
     if line_start:
         try:
@@ -81,7 +85,15 @@ def replace_code_block(match):
         sys.exit(1)
     else:
         code_content = "\n".join(file_lines)
-    return f"```{language}\n{code_content}```"
+    # Reconstruct the original code block header
+    header = f"```{language} file={code_file_path}"
+    if line_start:
+        header += f" line_start={line_start}"
+    if line_end:
+        header += f" line_end={line_end}"
+    header += "\n"
+    # Ensure only three backticks at the start and end
+    return f"{header}{code_content}\n```"
 
 
 def update_file(file_path: str):
@@ -99,8 +111,8 @@ def update_file(file_path: str):
                 flags=re.DOTALL,
             )
             if updated_content != content:
-                print(f"Updating {file_path}...")
                 file_path.write_text(updated_content)
+                print(f"{file_path}")
         except SystemExit:
             raise
         except Exception as e:
