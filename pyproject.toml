@@ -15,10 +15,17 @@ license = "MIT"
 python = "^3.10"
 pydantic = "^2.10"
 office365-rest-python-client = "^2"
+sphinx-pydantic = "^0.1.1"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.8"
 pytest = "^8.3"
+
+[tool.poetry.group.docs.dependencies]
+sphinx = "^8"
+myst-parser = "^4"
+sphinxawesome-theme = "^5.3"
+# sphinx-pydantic = "^0.5"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

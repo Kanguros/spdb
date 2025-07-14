@@ -1,0 +1,141 @@
+name: Build, Test, Publish, Docs
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Run Tests and Linters
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version:
+          - "3.9"
+          - "3.10"
+          - "3.11"
+        os:
+          - ubuntu-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Check out
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: latest
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: Load cache
+        id: cached-poetry-dependencies
+        uses: actions/cache@v4
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
+
+      - name: Install dependencies
+        run: poetry install --no-interaction --with=dev --with=docs
+
+      - name: Run pre-commit
+        run: poetry run pre-commit run --all-files --hook-stage manual
+
+      - name: Run pytest with coverage
+        run: poetry run pytest --cov=spdb --cov-report=term-missing --cov-report=html
+        env:
+          PYTHONPATH: .
+
+      - name: Upload HTML coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-html-${{ matrix.os }}-py${{ matrix.python-version }}
+          path: htmlcov/
+
+  publish:
+    name: Build and Publish
+    if: ${{ github.ref == 'refs/heads/master' }}
+    needs:
+      - test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: latest
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: Configure poetry
+        env:
+          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+        run: |
+          poetry config pypi-token.pypi $PYPI_TOKEN
+
+      - name: Build and publish the package
+        if: ${{ success() }}
+        run: poetry publish --build
+        
+  docs:
+    runs-on: ubuntu-latest
+    needs:
+      - test
+    steps:
+      - name: Check out
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: latest
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: Load cache
+        id: cached-poetry-dependencies
+        uses: actions/cache@v4
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
+
+      - name: Install dependencies
+        run: poetry install --no-interaction --with=docs
+
+      - name: Build documentation
+        id: build-docs
+        run: |
+          cd docs
+          poetry run sphinx-build -b html source build/html
+          touch build/html/.nojekyll
+
+      - name: Check links
+        run: |
+          cd docs/source
+          sphinx-build -b linkcheck . ../build/linkcheck
+
+      - name: Upload HTML
+        uses: actions/upload-artifact@v3
+        with:
+          name: docs-html
+          path: docs/build/html
