@@ -6,7 +6,7 @@ sys.path.insert(0, os.path.abspath("../.."))
 
 
 project = "SPDB"
-author = "SPDB Contributors"
+author = "Kamil Urbanek"
 release = "0.1.0"
 
 # Use README.md from root as main page
@@ -16,7 +16,7 @@ extensions = [
     "myst_parser",
     "sphinx.ext.autodoc",
     "sphinx.ext.napoleon",
-    "sphinx_pydantic",
+    "sphinx-pydantic",
 ]
 
 myst_enable_extensions = [
