@@ -89,7 +89,33 @@ print(servers[0].application.name)  # 'Application1'
 print(isinstance(servers[0].application, Application))  # True
 ```
 
-## Next Steps
+## Building Documentation with Pre-Commit
 
-- [API Reference](api_reference.md): Full details on classes and functions
-- [Testing](testing.md): How to run and write tests
+To ensure your documentation is always up-to-date, you can configure a pre-commit hook to build the documentation automatically. Follow these steps:
+
+1. Install pre-commit if you haven't already:
+
+   ```bash
+   pip install pre-commit
+   ```
+
+2. Add the following configuration to your `.pre-commit-config.yaml` file:
+
+   ```yaml
+   repos:
+     - repo: local
+       hooks:
+         - id: build-docs
+           name: Build Documentation
+           entry: poetry run sphinx-build -b html docs/source docs/build/html
+           language: system
+           pass_filenames: false
+   ```
+
+3. Install the pre-commit hooks:
+
+   ```bash
+   pre-commit install
+   ```
+
+Now, every time you commit changes, the documentation will be built automatically. This ensures that your documentation remains consistent with the codebase.

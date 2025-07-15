@@ -27,8 +27,3 @@
 - Use `Annotated` and `Field` for Pydantic model attributes
 - Use `LookupField` for relationships
 - Write docstrings for all public functions/classes
-- Prefer context managers for resource handling
-
-## Next Steps
-
-- [License](license.md): License information

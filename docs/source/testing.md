@@ -44,7 +44,3 @@ def test_server_query():
     assert isinstance(servers, list)
     assert servers[0].hostname
 ```
-
-## Next Steps
-
-- [Contributing](contributing.md): Guidelines for contributors

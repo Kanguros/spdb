@@ -5,13 +5,12 @@
 ## Table of Contents
 
 - [API Reference](#api-reference)
-    - [Table of Contents](#table-of-contents)
-    - [BaseModel](#basemodel)
-    - [LookupField](#lookupfield)
-    - [SPDB](#spdb)
-    - [SharePointProvider](#sharepointprovider)
-    - [Example Models](#example-models)
-    - [Next Steps](#next-steps)
+  - [Table of Contents](#table-of-contents)
+  - [BaseModel](#basemodel)
+  - [LookupField](#lookupfield)
+  - [SPDB](#spdb)
+  - [SharePointProvider](#sharepointprovider)
+  - [Example Models](#example-models)
 
 ## BaseModel
 
@@ -55,8 +54,3 @@
 See [Getting Started](getting_started.md) for example model definitions.
 
 ---
-
-## Next Steps
-
-- [Testing](testing.md): How to run and write tests
-- [Contributing](contributing.md): Guidelines for contributors

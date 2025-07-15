@@ -1,11 +1,13 @@
 """Integration tests for SPDB error handling and edge cases."""
-import pytest
+
 from unittest.mock import Mock
+
+import pytest
 
 from spdb.base import SPDB
 from spdb.error import ModelLoadError
 from spdb.mocks import MockSharePointProvider
-from spdb_example.models import Server, Application
+from spdb_example.models import Application, Server
 
 
 class TestSPDBErrorHandling:
@@ -16,10 +18,10 @@ class TestSPDBErrorHandling:
         # Create mock data with invalid structure
         mock_file = tmp_path / "Server.json"
         mock_file.write_text('[{"Id": "invalid_id", "InvalidField": "value"}]')
-        
+
         provider = MockSharePointProvider(tmp_path)
         spdb = SPDB(provider, [Server])
-        
+
         # Should handle invalid data gracefully by skipping bad records
         servers = spdb.get_model_items(Server)
         assert len(servers) == 0  # All records were invalid, so none loaded
@@ -27,10 +29,12 @@ class TestSPDBErrorHandling:
     def test_provider_failure_handling(self):
         """Test handling of provider failures."""
         mock_provider = Mock()
-        mock_provider.get_list_items.side_effect = Exception("Connection failed")
-        
+        mock_provider.get_list_items.side_effect = Exception(
+            "Connection failed"
+        )
+
         spdb = SPDB(mock_provider, [Server])
-        
+
         with pytest.raises(ModelLoadError):
             spdb.get_model_items(Server)
 
@@ -38,31 +42,35 @@ class TestSPDBErrorHandling:
         """Test relationship expansion when referenced data is missing."""
         # Server references Application that doesn't exist
         server_file = tmp_path / "Server.json"
-        server_file.write_text('''[{
+        server_file.write_text("""[{
             "Id": 1,
             "Hostname": "test-server",
             "Application": {"Id": 999, "Title": "Missing App"}
-        }]''')
-        
+        }]""")
+
         app_file = tmp_path / "Application.json"
         app_file.write_text('[{"Id": 1, "Name": "Real App"}]')
-        
+
         provider = MockSharePointProvider(tmp_path)
         spdb = SPDB(provider, [Server, Application])
-        
+
         servers = spdb.get_model_items(Server, expanded=True)
         # Should handle missing references gracefully
         assert len(servers) == 1
-        assert servers[0].application is None or isinstance(servers[0].application, str)
+        assert servers[0].application is None or isinstance(
+            servers[0].application, str
+        )
 
 
 class TestSPDBPerformance:
     """Test performance characteristics and optimization."""
-    
+
     def test_caching_effectiveness(self, tmp_path):
         """Test that caching reduces provider calls."""
         mock_file = tmp_path / "Server.json"
-        mock_file.write_text('[{"Id": 1, "Hostname": "test", "Application": {"Id": 1, "Title": "Test App"}}]')
+        mock_file.write_text(
+            '[{"Id": 1, "Hostname": "test", "Application": {"Id": 1, "Title": "Test App"}}]'
+        )
 
         provider = MockSharePointProvider(tmp_path)
         spdb = SPDB(provider, [Server])
@@ -83,12 +91,22 @@ class TestSPDBPerformance:
         spdb.get_model_items(Server)
         spdb.get_model_items(Server, expanded=True)
 
-        assert call_count == 1  # Only one actual fetch    def test_large_dataset_handling(self, tmp_path):
+        assert (
+            call_count == 1
+        )  # Only one actual fetch    def test_large_dataset_handling(self, tmp_path):
         """Test handling of large datasets."""
         # Generate large mock dataset
-        large_data = [{"Id": i, "Hostname": f"server-{i:04d}", "Application": {"Id": 1, "Title": "Test App"}} for i in range(1000)]
+        large_data = [
+            {
+                "Id": i,
+                "Hostname": f"server-{i:04d}",
+                "Application": {"Id": 1, "Title": "Test App"},
+            }
+            for i in range(1000)
+        ]
         mock_file = tmp_path / "Server.json"
         import json
+
         mock_file.write_text(json.dumps(large_data))
 
         provider = MockSharePointProvider(tmp_path)

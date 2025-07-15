@@ -2,8 +2,6 @@
 
 Implement your own _relational database_ on SharePoint Lists! No infrastructure, no database server, no maintenance overhead.
 
----
-
 ## Features
 
 - Store and query structured data using SharePoint as a backend
@@ -11,8 +9,6 @@ Implement your own _relational database_ on SharePoint Lists! No infrastructure,
 - Lazy loading and automatic expansion of relationships
 - No database server or extra infrastructure required
 - Leverage SharePoint’s built-in GUI for data entry and filtering
-
----
 
 ## Installation
 
@@ -33,7 +29,6 @@ pip install spdb
 - Python 3.10+
 - SharePoint access (username/password)
 
----
 
 ## Quickstart
 
@@ -113,8 +108,6 @@ servers = spdb.get_models(Server)
 print(servers[0].application)  # 'Application1' (lazy, as a string)
 ```
 
----
-
 ## Usage
 
 - **Lazy loading**: By default, related fields are returned as strings (e.g., application name).
@@ -131,31 +124,10 @@ print(servers[0].application.name)  # 'Application1'
 print(isinstance(servers[0].application, Application))  # True
 ```
 
----
-
 ## Relationship Expansion
 
 - Fields with `LookupField` and a model type are automatically expanded.
 - Lists of related models are supported.
-
----
-
-## Testing
-
-- Tests use mock SharePoint data for reliability.
-- Run tests with:
-
-```sh
-pytest
-```
-
----
-
-## Contributing
-
-Contributions are welcome! Please open issues or submit pull requests.
-
----
 
 ## License
 

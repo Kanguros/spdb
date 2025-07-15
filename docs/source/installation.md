@@ -29,7 +29,3 @@ SPDB uses:
 - Ruff (for linting)
 - Pytest (for testing)
 - Pre-commit (for code quality)
-
-## Next Steps
-
-- [Getting Started](getting_started.md): Define your models and query data

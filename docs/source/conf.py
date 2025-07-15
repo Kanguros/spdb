@@ -45,8 +45,14 @@ source_suffix = {
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 
-# Use sphinxawesome-theme for modern look
-html_theme = "sphinxawesome_theme"
+# Use sphinx-book-theme for modern look
+html_theme = "sphinx_book_theme"
+html_theme_options = {
+    "repository_url": "https://github.com/your-repo/spdb",
+    "use_repository_button": True,
+    "path_to_docs": "docs/source",
+}
+
 html_title = "SPDB Documentation"
 html_show_sourcelink = False
 
