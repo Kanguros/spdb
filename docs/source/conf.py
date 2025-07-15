@@ -16,8 +16,19 @@ extensions = [
     "myst_parser",
     "sphinx.ext.autodoc",
     "sphinx.ext.napoleon",
-    "sphinx-pydantic",
+    "sphinxcontrib.autodoc_pydantic",
 ]
+# MyST settings
+myst_heading_anchors = 3
+
+# autodoc_pydantic settings
+autodoc_pydantic_model_show_json = True
+autodoc_pydantic_model_show_config_summary = True
+autodoc_pydantic_model_show_field_summary = True
+autodoc_pydantic_model_show_validator_summary = True
+autodoc_pydantic_model_show_field_constraints = True
+autodoc_pydantic_model_show_validator_constraints = True
+autodoc_pydantic_model_show_json_error_examples = True
 
 myst_enable_extensions = [
     "colon_fence",
@@ -45,7 +56,7 @@ autodoc_member_order = "bysource"
 
 # Napoleon settings
 napoleon_google_docstring = True
-napoleon_numpy_docstring = True
+napoleon_numpy_docstring = False
 
 # MyST settings
 myst_heading_anchors = 3

@@ -4,28 +4,29 @@
 
 ## Table of Contents
 
-- [BaseModel](#basemodel)
-- [LookupField](#lookupfield)
-- [SPDB](#spdb)
-- [SharePointProvider](#sharepointprovider)
-
----
+- [API Reference](#api-reference)
+    - [Table of Contents](#table-of-contents)
+    - [BaseModel](#basemodel)
+    - [LookupField](#lookupfield)
+    - [SPDB](#spdb)
+    - [SharePointProvider](#sharepointprovider)
+    - [Example Models](#example-models)
+    - [Next Steps](#next-steps)
 
 ## BaseModel
 
-```{pydantic_model} spdb.model.BaseModel
+```{autopydantic_model} spdb.model.BaseModel
 
 ```
-
----
 
 ## LookupField
 
-```{pydantic_model} spdb.model.LookupField
-
+```{eval-rst}
+.. autoclass:: spdb.model.LookupField
+   :members:
+   :undoc-members:
+   :show-inheritance:
 ```
-
----
 
 ## SPDB
 

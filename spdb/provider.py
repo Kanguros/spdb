@@ -1,7 +1,10 @@
 import logging
 from typing import Any
 
-from office365.runtime.auth.authentication_context import AuthenticationContext, UserCredential
+from office365.runtime.auth.authentication_context import (
+    AuthenticationContext,
+    UserCredential,
+)
 from office365.sharepoint.client_context import ClientContext
 from office365.sharepoint.lists.list import List as SPlist
 
@@ -70,7 +73,9 @@ class SharePointProvider:
         """
         try:
             ctx_auth = AuthenticationContext(self.site_url, allow_ntlm=True)
-            if ctx_auth.with_credentials(UserCredential(self.username, self.password)):
+            if ctx_auth.with_credentials(
+                UserCredential(self.username, self.password)
+            ):
                 return ClientContext(self.site_url, ctx_auth)
             error_msg = ctx_auth.get_last_error()
             raise ProviderError(f"Authentication failed: {error_msg}")  # noqa: TRY301

@@ -134,8 +134,9 @@ jobs:
           cd docs/source
           sphinx-build -b linkcheck . ../build/linkcheck
 
-      - name: Upload HTML
-        uses: actions/upload-artifact@v3
+      - name: Deploy to GitHub Pages
+        if: ${{ github.ref == 'refs/heads/master' }}
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          name: docs-html
-          path: docs/build/html
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: docs/build/html

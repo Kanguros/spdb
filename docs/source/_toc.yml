@@ -1,9 +1,0 @@
-format: jb-book
-root: index
-chapters:
-  - file: installation
-  - file: getting_started
-  - file: api_reference
-  - file: testing
-  - file: contributing
-  - file: license

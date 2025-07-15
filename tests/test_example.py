@@ -19,7 +19,7 @@ def test_myspdb_models(my_mock_spdb):
     [SERVER_PARAMS, APPLICATION_PARAMS, ROLE_PARAMS, TEAM_PARAMS],
 )
 def test_get_models(model_type, model_count, my_mock_spdb):
-    items = my_mock_spdb.get_models(model_type, expanded=False)
+    items = my_mock_spdb.get_model_items(model_type, expanded=False)
     assert items and len(items) == model_count
     for item in items:
         for _, value in item:
@@ -30,7 +30,7 @@ def test_get_models(model_type, model_count, my_mock_spdb):
 
 def test_get_server_expanded(my_mock_spdb):
     model_type, model_count = SERVER_PARAMS
-    servers = my_mock_spdb.get_models(model_type, expanded=True)
+    servers = my_mock_spdb.get_model_items(model_type, expanded=True)
     assert servers and len(servers) == model_count
     for server in servers:
         if server.application:
@@ -41,7 +41,7 @@ def test_get_server_expanded(my_mock_spdb):
 
 def test_get_application_expanded(my_mock_spdb):
     model_type, model_count = APPLICATION_PARAMS
-    applications = my_mock_spdb.get_models(model_type, expanded=True)
+    applications = my_mock_spdb.get_model_items(model_type, expanded=True)
     assert applications and len(applications) == model_count
     for application in applications:
         if application.owner:
@@ -52,7 +52,7 @@ def test_get_application_expanded(my_mock_spdb):
 
 def test_get_role_expanded(my_mock_spdb):
     model_type, model_count = ROLE_PARAMS
-    roles = my_mock_spdb.get_models(model_type, expanded=True)
+    roles = my_mock_spdb.get_model_items(model_type, expanded=True)
     assert roles and len(roles) == model_count
     for role in roles:
         for _, value in role:
@@ -63,7 +63,7 @@ def test_get_role_expanded(my_mock_spdb):
 
 def test_get_team_expanded(my_mock_spdb):
     model_type, model_count = TEAM_PARAMS
-    teams = my_mock_spdb.get_models(model_type, expanded=True)
+    teams = my_mock_spdb.get_model_items(model_type, expanded=True)
     assert teams and len(teams) == model_count
     for team in teams:
         for _, value in team:
