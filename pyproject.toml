@@ -14,17 +14,17 @@ license = "MIT"
 [tool.poetry.dependencies]
 python = "^3.10"
 pydantic = "^2.10"
-office365-rest-python-client = "^2"
-pytest-cov = "^6.2.1"
+office365-rest-python-client = "^2.6"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.8"
 pytest = "^8.3"
+pytest-cov = "^6.2"
 
 [tool.poetry.group.docs.dependencies]
 sphinx = "^8"
 myst-parser = "^4"
-sphinxawesome-theme = "^5.3"
+sphinx-book-theme = "^1.1.4"
 autodoc-pydantic = "^2.2"
 linkify-it-py = "^2.0.3"
 

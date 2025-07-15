@@ -5,12 +5,12 @@
 ## Table of Contents
 
 - [API Reference](#api-reference)
-  - [Table of Contents](#table-of-contents)
-  - [BaseModel](#basemodel)
-  - [LookupField](#lookupfield)
-  - [SPDB](#spdb)
-  - [SharePointProvider](#sharepointprovider)
-  - [Example Models](#example-models)
+    - [Table of Contents](#table-of-contents)
+    - [BaseModel](#basemodel)
+    - [LookupField](#lookupfield)
+    - [SPDB](#spdb)
+    - [SharePointProvider](#sharepointprovider)
+    - [Example Models](#example-models)
 
 ## BaseModel
 

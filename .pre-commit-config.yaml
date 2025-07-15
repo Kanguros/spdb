@@ -44,3 +44,12 @@ repos:
             args:
                 - "--tab-width"
                 - "4"
+
+    - repo: local
+      hooks:
+          - id: build-docs
+            name: Build Documentation
+            entry: poetry run sphinx-build -b html docs/source docs/build/html
+            language: system
+            pass_filenames: false
+            always_run: true

@@ -29,7 +29,6 @@ pip install spdb
 - Python 3.10+
 - SharePoint access (username/password)
 
-
 ## Quickstart
 
 ### 1. Define Your Models

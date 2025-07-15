@@ -95,27 +95,27 @@ To ensure your documentation is always up-to-date, you can configure a pre-commi
 
 1. Install pre-commit if you haven't already:
 
-   ```bash
-   pip install pre-commit
-   ```
+    ```bash
+    pip install pre-commit
+    ```
 
 2. Add the following configuration to your `.pre-commit-config.yaml` file:
 
-   ```yaml
-   repos:
-     - repo: local
-       hooks:
-         - id: build-docs
-           name: Build Documentation
-           entry: poetry run sphinx-build -b html docs/source docs/build/html
-           language: system
-           pass_filenames: false
-   ```
+    ```yaml
+    repos:
+        - repo: local
+          hooks:
+              - id: build-docs
+                name: Build Documentation
+                entry: poetry run sphinx-build -b html docs/source docs/build/html
+                language: system
+                pass_filenames: false
+    ```
 
 3. Install the pre-commit hooks:
 
-   ```bash
-   pre-commit install
-   ```
+    ```bash
+    pre-commit install
+    ```
 
 Now, every time you commit changes, the documentation will be built automatically. This ensures that your documentation remains consistent with the codebase.
